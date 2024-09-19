@@ -5,7 +5,6 @@ import { useFormik } from 'formik'
 import { registerValidation } from '../helper/validate'
 import convertToBase64 from '../helper/convert';
 
-import styles from '../styles/Username.module.css';
 
 // images
 import avatar from '../assets/user.png'
@@ -53,7 +52,7 @@ export default function Register() {
                 <img src={file || avatar} className="w-24 h-24 sm:w-32 sm:h-32 rounded-full" alt="avatar" />
                 </label>
 
-                <input onChange={onUpload} type="file" id="profile" name='profile' />
+                <input className='hidden' onChange={onUpload} type="file" id="profile" name='profile' />
               </div>
 
               <div className="space-y-4">
