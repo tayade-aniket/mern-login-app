@@ -21,21 +21,19 @@ const port = 8080;
 
 // HTTP GET Request
 app.get("/", (req, res) => {
-    res.status(201).json("Home GET Request");
-})
+    res.status(200).json("Home GET Request"); // Use 200 for GET requests
+});
 
 // api routes
 app.use('/api', router);
 
-// Start Server only we have a valid connection
-connect().then(() => {
-    try{
+// Start Server only if we have a valid connection
+connect()
+    .then(() => {
         app.listen(port, () => {
             console.log(`Server connected to http://localhost:${port}`);
-        })
-    }catch(error){
-        console.log('Cannot connect to the server');
-    }
-}).catch(error => {
-    console.log("Invalid database connecttion...!");
-});
+        });
+    })
+    .catch(error => {
+        console.error("Invalid database connection:", error); // Log the actual error
+    });

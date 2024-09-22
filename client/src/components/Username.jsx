@@ -1,13 +1,17 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Toaster } from 'react-hot-toast'
-import { useFormik } from 'formik'
-import { usernameValidate } from '../helper/validate'
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
+import { useFormik } from 'formik';
+import { usernameValidate } from '../helper/validate';
+import { useAuthStore } from '../store/store';
 
 // images
 import avatar from '../assets/user.png'
 
 export default function Username() {
+  
+  const setUsername = useAuthStore(state => state.setUsername);
+
   const formik = useFormik({
     initialValues: {
       username: ''
@@ -16,7 +20,12 @@ export default function Username() {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async values => {
-      console.log(values)
+      try {
+        await setUsername(values.username);
+        toast.success('Username set successfully!');
+      } catch (error) {
+        toast.error('Failed to set username');
+      }
     }
   })
 
@@ -34,7 +43,7 @@ export default function Username() {
 
           <form className="space-y-6" onSubmit={formik.handleSubmit}>
             <div className="flex justify-center">
-              <img src={avatar} className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-gray-100 shadow-lg hover:border-gray-200 cursor-pointer" alt="avatar" />
+              <img src={avatar} className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-gray-100 shadow-lg hover:border-gray-200 cursor-pointer" alt="User avatar" />
             </div>
 
             <div className="space-y-4">
@@ -44,11 +53,13 @@ export default function Username() {
                 type="text" 
                 placeholder='Username' 
               />
+              {formik.errors.username && <div className="text-red-500">{formik.errors.username}</div>}
               <button 
                 className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-lg text-xl shadow-sm transition duration-300 ease-in-out"
                 type="submit"
+                disabled={formik.isSubmitting}
               >
-                Let's Go
+                {formik.isSubmitting ? 'Submitting...' : "Let's Go"}
               </button>
             </div>
 
